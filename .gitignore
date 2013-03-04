@@ -1,5 +1,7 @@
-.eunit
-deps
-*.o
+deps/
 *.beam
+*.app
+.eunit/
 *.plt
+src/mechanus_lexer.erl
+src/mechanus_parser.erl

@@ -1,0 +1,7 @@
+MY_STATE:
+  some_event    -> YOUR_STATE,
+  another_event -> HER_STATE.
+
+YOUR_STATE: yae -> HER_STATE.
+
+HER_STATE: .
