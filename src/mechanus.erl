@@ -53,7 +53,7 @@
 -type action()   :: module().
 
 %% Inputs
--type data()     :: dict()
+-type data()     :: dict:dict()
                   | [{_, _}]
                   | eon:object().
 -type id()       :: _.
