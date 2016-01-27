@@ -62,7 +62,8 @@ visualize(MrlFile) ->
   Vertices     = get_vertices(Parsed),
   Edges        = get_edges(Parsed),
   s2_dot:digraph({filename:basename(Name), Vertices, Edges}, DotFile),
-  s2_sh:cmd(io_lib:format("dot -Tpng -O ~s", [DotFile])).
+  {ok, _}      = s2_sh:eval(io_lib:format("dot -Tpng -O ~s", [DotFile])),
+  ok.
 
 get_vertices(Parsed) ->
   [{?a2l(State), lists:flatten(io_lib:format("~p: ~p", [State, Ens ++ Exs]))} ||

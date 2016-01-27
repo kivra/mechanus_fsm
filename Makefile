@@ -16,8 +16,9 @@ include erlang.mk
 # Utilities ############################################################
 .PHONY: repl eunit_repl
 
-repl:
-	erl -pa ebin deps/*/ebin
+repl: app
+	@exec erl -pa $(PWD)/ebin -pa $(PWD)/deps/**/ebin \
+            -pa $(PWD)/deps/**/deps/**/ebin
 
 eunit_repl:
 	erl -pa .eunit deps/*/ebin
