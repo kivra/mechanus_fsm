@@ -35,6 +35,8 @@
 %% @doc Construct modron ID according to Spec.
 eval(Source, Mid) ->
   eval(Source, Mid, []).
+eval(File, Mid, Data) when is_binary(File) ->
+  eval(binary_to_list(File), Mid, Data);
 eval(File, Mid, Data)
   when is_atom(File)
      ; ?is_string(File) ->
