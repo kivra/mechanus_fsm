@@ -2,7 +2,8 @@ PROJECT = mechanus_fsm
 
 # Options ##############################################################
 EUNIT_OPTS = [verbose]
-ERLC_OPTS = +debug_info +nowarn_shadow_vars +warnings_as_errors
+ERLC_OPTS = +debug_info +nowarn_shadow_vars +warnings_as_errors \
+            -DS2_USE_LAGER
 
 # Dependecies ##########################################################
 DEPS = stdlib2 eon

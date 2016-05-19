@@ -55,7 +55,8 @@
 %% Inputs
 -type data()     :: dict:dict()
                   | [{_, _}]
-                  | eon:object().
+                  | eon:object()
+                  | map().
 -type id()       :: _.
 -type spec()     :: [{atom(), atom(), atom()}
                   | {atom(), [action()], [action()]}]
@@ -77,7 +78,7 @@ event(Name, Input, ValidFrom)
   when is_atom(Name)
      , is_integer(ValidFrom)
      , ValidFrom >= 0 ->
-  #event{name=Name, input=eon:new(Input), valid_from=ValidFrom}.
+  #event{name=Name, input=data(Input), valid_from=ValidFrom}.
 
 -spec result() -> result().
 result() ->
@@ -90,11 +91,16 @@ result(Output) ->
 result(Output, Event) when not is_list(Event) ->
   result(Output, [Event]);
 result(Output, Events) when is_list(Events) ->
-  #result{ output = eon:new(Output)
+  #result{ output = data(Output)
          , events = [if is_atom(E)          -> event(E);
                         is_record(E, event) -> E
                      end || E <- Events]
          }.
+
+data(Data) when is_map(Data) ->
+  Data;
+data(Data) ->
+  eon:new(Data).
 
 %%%_ * Time ------------------------------------------------------------
 %% @doc Return a valid_from time in the future.

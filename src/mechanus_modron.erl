@@ -45,9 +45,14 @@ eval(File, Mid, Data)
 eval(Spec, Mid, Data)
   when is_list(Spec) ->
   s2_maybe:do(
-    [ ?thunk(#modron{id=Mid, state=parse(Spec), data=eon:new(Data), spec=Spec})
+    [ ?thunk(#modron{id=Mid, state=parse(Spec), data=data(Data), spec=Spec})
     , fun(#modron{state=S} = M) -> M#modron{actions=enter_state(S)} end
     ]).
+
+data(Data) when is_map(Data) ->
+  Data;
+data(Data) ->
+  eon:new(Data).
 
 -spec apply(#modron{}, #event{} | [#event{}]) ->
                maybe({done, #modron{}} |
@@ -274,6 +279,8 @@ effect(#modron{id=ID, actions=As, act_hist=Hist} = M) ->
 
 -spec merge(mechanus:data(), mechanus:data()) -> mechanus:data().
 %% @doc Merge Data2 into Data1, with entries in Data2 taking precedence.
+merge(Data1, Data2) when is_map(Data1), is_map(Data2) ->
+  maps:merge(Data1, Data2);
 merge(Data1, Data2) ->
   eon:fold(
     fun(K, V, Data1) ->
@@ -370,6 +377,10 @@ special_case_test() ->
 merge_test() ->
   Obj     = merge([foo, 1], [foo, 2]),
   {ok, 2} = eon:get(Obj, foo).
+
+merge_maps_test() ->
+  Obj     = merge(#{foo => 1}, #{foo => 2}),
+  {ok, 2} = maps:find(foo, Obj).
 
 -endif.
 
