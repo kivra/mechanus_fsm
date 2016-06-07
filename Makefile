@@ -6,8 +6,9 @@ ERLC_OPTS = +debug_info +nowarn_shadow_vars +warnings_as_errors \
             -DS2_USE_LAGER
 
 # Dependecies ##########################################################
-DEPS = stdlib2 eon
+DEPS = stdlib2 eon lager
 
+dep_lager   = git git://github.com/kivra/lager       master
 dep_stdlib2 = git git://github.com/kivra/stdlib2.git master
 dep_eon     = git git://github.com/kivra/eon.git     master
 
