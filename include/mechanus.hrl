@@ -33,7 +33,7 @@
 -record(modron,
         { id=error('modron.id')       :: mechanus:id() %DB key
         , state=error('modron.state') :: #state{}      %current state
-        , data=eon:new()              :: obj(_, _)     %collected [in|out]puts
+        , data=eon:new()              :: mechanus:data() %collected [in|out]puts
         , events=[]                   :: [#event{}]    %unprocessed events
         , ev_hist=[]                  :: [#event{}]    %processed events (rev)
         , actions=[]                  :: [module()]    %unprocessed actions
