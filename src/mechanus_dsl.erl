@@ -66,7 +66,10 @@ visualize(MrlFile) ->
   ok.
 
 get_vertices(Parsed) ->
-  [{?a2l(State), lists:flatten(io_lib:format("~p: ~p", [State, Ens ++ Exs]))} ||
+  [{?a2l(State), lists:flatten(
+            [ io_lib:format("~s\\n", [State])
+            , lists:map(fun (Item) -> io_lib:format("~p\\l", [Item]) end, Ens ++ Exs)
+            ])} ||
      [State, Ens, Exs|_] <- [?t2l(X) || X <- Parsed]].
 
 get_edges(Parsed) ->
