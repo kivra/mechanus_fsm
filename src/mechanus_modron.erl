@@ -248,7 +248,7 @@ is_valid(#event{valid_from=TS}) -> mechanus:now() > TS.
 -spec exit_state(#state{}, atom(), mechanus:id()) ->
                     {#state{}, [module()]} | no_return().
 %% @doc Go to the next state via Event.
-exit_state(#state{name=Name, tab=Tab, on_exit=OnExit}, Event, ID) ->
+exit_state(#state{name=Name, tab=Tab, on_entry=OnEntry, on_exit=OnExit}, Event, ID) ->
   case eon:get(Tab, Event) of
     {ok, State} ->
       ?info("~p: ~p transitioning to ~p via ~p",
@@ -256,7 +256,13 @@ exit_state(#state{name=Name, tab=Tab, on_exit=OnExit}, Event, ID) ->
       {State, OnExit};
     {error, notfound} ->
       ?error("~p: ~p no transition for ~p", [ID, Name, Event]),
-      throw({error, no_such_transition})
+      throw({error, {no_such_transition, [
+        {modron_id, ID},
+        {modron_state, Name},
+        {modron_entry_actions, OnEntry},
+        {modron_exit_actions, OnExit},
+        {modron_transition_to, Event}
+      ]}})
   end.
 
 enter_state(#state{on_entry=OnEntry}) -> OnEntry.
