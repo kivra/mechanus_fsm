@@ -374,7 +374,7 @@ special_case_test() ->
   timer:sleep(1000),
   {ok, {next, M}} = apply(M1, []),
   %% Bad event
-  {error,no_such_transition} = apply(M, #event{name=ev3}),
+  {error, {no_such_transition, _}} = apply(M, #event{name=ev3}),
   %% Bad Action
   {error, {lifted_exn, _, _}} = apply(M, #event{name=ev2}),
 
