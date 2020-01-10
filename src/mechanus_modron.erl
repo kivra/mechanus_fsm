@@ -256,13 +256,13 @@ exit_state(#state{name=Name, tab=Tab, on_entry=OnEntry, on_exit=OnExit}, Event, 
       {State, OnExit};
     {error, notfound} ->
       ?error("~p: ~p no transition for ~p", [ID, Name, Event]),
-      throw({error, {no_such_transition, [
-        {modron_id, ID},
-        {modron_state, Name},
-        {modron_entry_actions, OnEntry},
-        {modron_exit_actions, OnExit},
-        {modron_transition_to, Event}
-      ]}})
+      throw({error, {no_such_transition,
+            [ {modron_id, ID}
+            , {modron_state, Name}
+            , {modron_entry_actions, OnEntry}
+            , {modron_exit_actions, OnExit}
+            , {modron_transition_to, Event}
+            ] }})
   end.
 
 enter_state(#state{on_entry=OnEntry}) -> OnEntry.
