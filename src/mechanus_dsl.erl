@@ -91,9 +91,12 @@ basic_test() ->
        , {'YOUR_STATE', [], [quux],
           yae, 'HER_STATE'}
        , {'HER_STATE', [], []}
-       ]} = parse("../test/test.mrl"),
+       ]} = parse(relative_to_this_file("../test/test.mrl")),
   %% Lexer error (; instead of ,)
-  {error, _} = parse('../test/test_bad').
+  {error, _} = parse(list_to_atom(relative_to_this_file("../test/test_bad"))).
+
+relative_to_this_file(Path) ->
+  filename:join(filename:dirname(?FILE), Path).
 
 -endif.
 
