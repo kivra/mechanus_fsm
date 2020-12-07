@@ -274,7 +274,7 @@ effect(#modron{id=ID, actions=As, act_hist=Hist} = M) ->
     fun(A, #modron{data=D, events=Es} = M) ->
       case ?lift(A:perform(D)) of
         {ok, R} ->
-          ?info("~p: action ~p succeeded: ~p", [ID, A, R]),
+          ?info("~p: action ~p succeeded: ~9999tp", [ID, A, R]),
           %% Inject before existing events!
           M#modron{data=merge(D, R#result.output), events=R#result.events++Es};
         {error, Rsn} = Err ->
