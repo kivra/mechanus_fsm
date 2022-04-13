@@ -251,11 +251,19 @@ is_valid(#event{valid_from=TS}) -> mechanus:now() > TS.
 exit_state(#state{name=Name, tab=Tab, on_entry=OnEntry, on_exit=OnExit}, Event, ID) ->
   case eon:get(Tab, Event) of
     {ok, State} ->
-      ?info("~p: ~p transitioning to ~p via ~p",
-            [ID, Name, State#state.name, Event]),
+      ?info(#{ description => "State transition applied"
+             , action_id => ID
+             , action_name => Name
+             , state => State#state.name
+             , event => Event
+             }),
       {State, OnExit};
     {error, notfound} ->
-      ?error("~p: ~p no transition for ~p", [ID, Name, Event]),
+      ?error(#{ description => "no transition found for action"
+              , action_id => ID
+              , action_name => Name
+              , event => Event
+              }),
       throw({error, {no_such_transition,
             [ {modron_id, ID}
             , {modron_state, Name}
@@ -274,11 +282,19 @@ effect(#modron{id=ID, actions=As, act_hist=Hist} = M) ->
     fun(A, #modron{data=D, events=Es} = M) ->
       case ?lift(A:perform(D)) of
         {ok, R} ->
-          ?info("~p: action ~p succeeded: ~9999tp", [ID, A, R]),
+          ?info(#{ description => "Action succeeded"
+                 , action_id => ID
+                 , action_name => A
+                 , result => R
+                 }),
           %% Inject before existing events!
           M#modron{data=merge(D, R#result.output), events=R#result.events++Es};
         {error, Rsn} = Err ->
-          ?error("~p: action ~p failed: ~p", [ID, A, Rsn]),
+          ?error(#{description => "Action failed"
+                 , action_id => ID
+                 , action_name => A
+                 , reason => Rsn
+                 }),
           throw(Err)
       end
     end, M#modron{actions=[], act_hist=[As|Hist]}, As).
