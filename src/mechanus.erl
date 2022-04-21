@@ -28,6 +28,7 @@
 -export([result/0]).
 -export([result/1]).
 -export([result/2]).
+-export([result_to_map/1]).
 
 %% Time
 -export([in/1]).
@@ -96,6 +97,11 @@ result(Output, Events) when is_list(Events) ->
                         is_record(E, event) -> E
                      end || E <- Events]
          }.
+
+result_to_map(#result{output = O, events = E}) ->
+  #{output => O, events => E};
+result_to_map(R) ->
+  R.
 
 data(Data) when is_map(Data) ->
   Data;
