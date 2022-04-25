@@ -100,6 +100,10 @@ result(Output, Events) when is_list(Events) ->
 
 result_to_map(#result{output = O, events = E}) ->
   #{output => O, events => E};
+result_to_map(#result{notification_settings = N}) ->
+  #{notification_settings => N};
+result_to_map(#result{content = C}) ->
+  #{content => C};
 result_to_map(R) ->
   R.
 
