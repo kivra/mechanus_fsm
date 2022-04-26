@@ -103,7 +103,7 @@ result_to_map(#result{output = O, events = E}) ->
 result_to_map(R) ->
   R.
 
-redact(#{company = Company}) ->
+redact(#{company := Company}) ->
   eon:del(eon:del(eon:del(Company, <<"permissions">>),
                   <<"shares">>),
           <<"signatories">>);
