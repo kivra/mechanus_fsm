@@ -99,9 +99,16 @@ result(Output, Events) when is_list(Events) ->
          }.
 
 result_to_map(#result{output = O, events = E}) ->
-  #{output => O, events => E};
+  #{output => redact(O), events => E};
 result_to_map(R) ->
   R.
+
+redact(#{company = Company}) ->
+  eon:del(eon:del(eon:del(Company, <<"permissions">>),
+                  <<"shares">>),
+          <<"signatories">>);
+redact(O) ->
+  O.
 
 data(Data) when is_map(Data) ->
   Data;
