@@ -108,10 +108,9 @@ redact(#{company := Company}) ->
                   <<"shares">>),
           <<"signatories">>);
 redact(#{notification_settings := NotSets}) ->
-  %% Not binaries !!
-  maps:remove(maps:remove(maps:remove(NotSets, email),
-                          phone),
-              user_name);
+  maps:remove(email,
+              maps:remove(phone,
+                          maps:remove(user_name, NotSets);
 redact(#{user := User}) ->
   eon:del(eon:del(eon:del(eon:del(eon:del(User, <<"ssn">>),
                                   <<"first_name">>),
