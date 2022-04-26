@@ -107,6 +107,16 @@ redact(#{company := Company}) ->
   eon:del(eon:del(eon:del(Company, <<"permissions">>),
                   <<"shares">>),
           <<"signatories">>);
+redact(#{notification_settings := NotSets}) ->
+  eon:del(eon:del(eon:del(NotSets, <<"email">>),
+                  <<"phone">>),
+          <<"user_name">>);
+redact(#{user := User}) ->
+  eon:del(eon:del(eon:del(eon:del(eon:del(User, <<"ssn">>),
+                                  <<"first_name">>),
+                          <<"last_name">>),
+                  <<"primary_email">>),
+          <<"primary_phone">>);
 redact(O) ->
   O.
 
