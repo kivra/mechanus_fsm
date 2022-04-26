@@ -108,9 +108,10 @@ redact(#{company := Company}) ->
                   <<"shares">>),
           <<"signatories">>);
 redact(#{notification_settings := NotSets}) ->
-  eon:del(eon:del(eon:del(NotSets, <<"email">>),
-                  <<"phone">>),
-          <<"user_name">>);
+  %% Not binaries !!
+  eon:del(eon:del(eon:del(NotSets, email),
+                  phone),
+          user_name);
 redact(#{user := User}) ->
   eon:del(eon:del(eon:del(eon:del(eon:del(User, <<"ssn">>),
                                   <<"first_name">>),
