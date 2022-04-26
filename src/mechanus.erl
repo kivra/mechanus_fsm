@@ -67,6 +67,11 @@
 -opaque event()  :: #event{}.
 -opaque result() :: #result{}.
 
+-define(R2M(Name, Record),
+        lists:foldl(fun({I, E}, Acc) -> Acc#{E => element(I, Record) } end,
+                    #{}, lists:zip(lists:seq(2, (record_info(size, Name))),
+                                   (record_info(fields, Name))))).
+
 %%%_ * Constructors ----------------------------------------------------
 -spec event(atom()) -> event().
 event(Name) ->
@@ -100,11 +105,9 @@ result(Output, Events) when is_list(Events) ->
 
 result_to_map(#result{output = O, events = E}) ->
   #{output => O, events => E};
-result_to_map(#result{notification_settings = N}) ->
-  #{notification_settings => N};
-result_to_map(#result{content = C}) ->
-  #{content => C};
 result_to_map(R) ->
+  Map = ?R2M(result, R),
+  io:format(standard_error, "Result as record ~p~nResult as map ~p~n", [R, Map]),
   R.
 
 data(Data) when is_map(Data) ->
