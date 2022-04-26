@@ -283,7 +283,7 @@ effect(#modron{id=ID, actions=As, act_hist=Hist} = M) ->
       case ?lift(A:perform(D)) of
         {ok, R} ->
           %% Set to debug while PII data issue is being addressed
-          ?debug(#{ description => "Action succeeded"
+          ?info(#{ description => "Action succeeded"
                   , action_id => ID
                   , action_name => A
                   , result => mechanus:result_to_map(R)
