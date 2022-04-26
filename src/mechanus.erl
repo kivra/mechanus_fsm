@@ -103,14 +103,14 @@ result_to_map(#result{output = O, events = E}) ->
 result_to_map(R) ->
   R.
 
+redact(#{notification_settings := NotSets}) ->
+  maps:remove(email,
+              maps:remove(phone,
+                          maps:remove(user_name, NotSets)));
 redact(#{company := Company}) ->
   eon:del(eon:del(eon:del(Company, <<"permissions">>),
                   <<"shares">>),
           <<"signatories">>);
-redact(#{notification_settings := NotSets}) ->
-  maps:remove(email,
-              maps:remove(phone,
-                          maps:remove(user_name, NotSets);
 redact(#{user := User}) ->
   eon:del(eon:del(eon:del(eon:del(eon:del(User, <<"ssn">>),
                                   <<"first_name">>),
