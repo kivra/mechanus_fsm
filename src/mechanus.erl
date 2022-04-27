@@ -99,26 +99,9 @@ result(Output, Events) when is_list(Events) ->
          }.
 
 result_to_map(#result{output = O, events = E}) ->
-  #{output => redact(O), events => E};
+  #{output => O, events => E};
 result_to_map(R) ->
   R.
-
-redact(#{notification_settings := NotSets}) ->
-  maps:remove(email,
-              maps:remove(phone,
-                          maps:remove(user_name, NotSets)));
-redact(#{company := Company}) ->
-  eon:del(eon:del(eon:del(Company, <<"permissions">>),
-                  <<"shares">>),
-          <<"signatories">>);
-redact(#{user := User}) ->
-  eon:del(eon:del(eon:del(eon:del(eon:del(User, <<"ssn">>),
-                                  <<"first_name">>),
-                          <<"last_name">>),
-                  <<"primary_email">>),
-          <<"primary_phone">>);
-redact(O) ->
-  O.
 
 data(Data) when is_map(Data) ->
   Data;
