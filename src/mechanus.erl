@@ -140,6 +140,9 @@ from_list(Map) when is_map(Map) ->
 from_list(Other) ->
     Other.
 
+from_list_map_value_mapper(_Key, Value) ->
+    from_list(Value).
+
 data(Data) when is_map(Data) ->
   Data;
 data(Data) ->
