@@ -106,7 +106,7 @@ result_to_map(R) ->
 deep_flatten(Map) when is_map(Map) ->
   lists:reverse(deep_fold(Map, [], fun deep_flattener/3));
 deep_flatten(Eon) ->
-  deep_flatten(eon:to_map(Eon)).
+  deep_flatten(eon:to_dmap(Eon)).
 
 
 deep_fold(Map, Init, Fun) when is_function(Fun, 3) andalso is_map(Map) ->
