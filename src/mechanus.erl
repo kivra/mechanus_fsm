@@ -99,9 +99,31 @@ result(Output, Events) when is_list(Events) ->
          }.
 
 result_to_map(#result{output = O, events = E}) ->
-  #{output => O, events => E};
+  #{output => deep_flatten(O), events => E};
 result_to_map(R) ->
   R.
+
+deep_flatten(Map) when is_map(Map) ->
+  lists:reverse(deep_fold(Map, [], fun deep_flattener/3));
+deep_flatten(Eon) ->
+  deep_flatten(eon:to_map(Eon)).
+
+
+deep_fold(Map, Init, Fun) when is_function(Fun, 3) andalso is_map(Map) ->
+    maps:fold(
+        fun
+            (Key, Value, Acc0) when is_map(Value) ->
+                Acc1 = deep_fold(Value, Acc0, Fun),
+                Fun(Key, Value, Acc1);
+            (Key, Value, Acc0) ->
+                Fun(Key, Value, Acc0)
+        end,
+        Init,
+        Map
+    ).
+
+deep_flattener(Key, Value, List) ->
+    [{Key, Value} | List].
 
 data(Data) when is_map(Data) ->
   Data;
