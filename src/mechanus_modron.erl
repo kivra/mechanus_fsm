@@ -282,10 +282,13 @@ effect(#modron{id=ID, actions=As, act_hist=Hist} = M) ->
     fun(A, #modron{data=D, events=Es} = M) ->
       case ?lift(A:perform(D)) of
         {ok, R} ->
-          %% Set to debug while PII data issue is being addressed
           ?info(#{ description => "Action succeeded"
                   , action_id => ID
                   , action_name => A
+                  }),
+          %% Set to debug while PII data issue is being addressed
+          ?debug(#{ description => "Result"
+                  , action_id => ID
                   , result => mechanus:result_to_map(R)
                   }),
           %% Inject before existing events!
