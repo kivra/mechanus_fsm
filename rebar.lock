@@ -15,7 +15,7 @@
  {<<"quantile_estimator">>,{pkg,<<"quantile_estimator">>,<<"0.2.1">>},1},
  {<<"stdlib2">>,
   {git,"https://github.com/kivra/stdlib2.git",
-       {ref,"86c3a1858481bf23b8c4fdd46691c1f0002c9540"}},
+       {ref,"f5fdd13de0f02d7b1f9482133a7e4bf8cce14974"}},
   0}]}.
 [
 {pkg_hash,[
