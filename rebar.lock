@@ -1,0 +1,27 @@
+{"1.2.0",
+[{<<"eon">>,
+  {git,"https://github.com/kivra/eon.git",
+       {ref,"10a8b462be6dffe8ae164a665a84ae70f73fae9c"}},
+  0},
+ {<<"goldrush">>,
+  {git,"https://github.com/DeadZen/goldrush.git",
+       {ref,"8f1b715d36b650ec1e1f5612c00e28af6ab0de82"}},
+  1},
+ {<<"lager">>,
+  {git,"https://github.com/kivra/lager",
+       {ref,"92b1548f7f97a7fef257dffc45ef7b14006334e6"}},
+  0},
+ {<<"prometheus">>,{pkg,<<"prometheus">>,<<"4.10.0">>},0},
+ {<<"quantile_estimator">>,{pkg,<<"quantile_estimator">>,<<"0.2.1">>},1},
+ {<<"stdlib2">>,
+  {git,"https://github.com/kivra/stdlib2.git",
+       {ref,"86c3a1858481bf23b8c4fdd46691c1f0002c9540"}},
+  0}]}.
+[
+{pkg_hash,[
+ {<<"prometheus">>, <<"792ADBF0130FF61B5FA8826F013772AF24B6E57B984445C8D602C8A0355704A1">>},
+ {<<"quantile_estimator">>, <<"EF50A361F11B5F26B5F16D0696E46A9E4661756492C981F7B2229EF42FF1CD15">>}]},
+{pkg_hash_ext,[
+ {<<"prometheus">>, <<"2A99BB6DCE85E238C7236FDE6B0064F9834DC420DDBD962AAC4EA2A3C3D59384">>},
+ {<<"quantile_estimator">>, <<"282A8A323CA2A845C9E6F787D166348F776C1D4A41EDE63046D72D422E3DA946">>}]}
+].

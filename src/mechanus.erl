@@ -22,6 +22,7 @@
 
 %%%_* Exports ==========================================================
 %% Constructors
+-export([init_counters/0]).
 -export([event/1]).
 -export([event/2]).
 -export([event/3]).
@@ -29,6 +30,7 @@
 -export([result/1]).
 -export([result/2]).
 -export([result_to_map/1]).
+
 
 %% Time
 -export([in/1]).
@@ -38,6 +40,7 @@
 -export([minutes/1]).
 -export([hours/1]).
 -export([days/1]).
+-export([is_counters_initialized/0]).
 
 -export_type([data/0]).
 -export_type([event/0]).
@@ -66,6 +69,28 @@
 %% ADTs
 -opaque event()  :: #event{}.
 -opaque result() :: #result{}.
+
+init_counters() ->
+  application:ensure_started(prometheus),
+  prometheus_counter:declare([
+    {name, mechanus_actions},
+    {labels, [action, outcome]},
+    {help, "Number of times a specific action was performed"}
+  ]),
+  prometheus_counter:declare([
+    {name, mechanus_state_transitions},
+    {labels, [old_state, new_state, event]},
+    {help, "Number of times a state transition occured"}
+  ]),
+  prometheus_counter:declare([
+    {name, mechanus_state_transitions_failed},
+    {labels, [old_state, event]},
+    {help, "Number of times a state transition failed to happen"}
+  ]),
+  application:set_env(mechanus_fsm, counters_initialized, true).
+
+is_counters_initialized() ->
+  application:get_env(mechanus_fsm, counters_initialized, false).
 
 %%%_ * Constructors ----------------------------------------------------
 -spec event(atom()) -> event().
