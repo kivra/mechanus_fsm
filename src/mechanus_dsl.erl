@@ -28,7 +28,7 @@
 -include("mechanus.hrl").
 
 %%%_* Code =============================================================
--spec parse(filename()) -> maybe([_], _).
+-spec parse(filename()) -> 'maybe'([_], _).
 parse(File) when is_atom(File) ->
     parse(?a2l(File) ++ ".mrl");
 parse(File) when ?is_string(File) ->

@@ -31,7 +31,7 @@
 
 %%%_* Code =============================================================
 %%%_ * API -------------------------------------------------------------
--spec eval(filename() | mechanus:spec(), mechanus:id()) -> maybe(#modron{}, _).
+-spec eval(filename() | mechanus:spec(), mechanus:id()) -> 'maybe'(#modron{}, _).
 %% @doc Construct modron ID according to Spec.
 eval(Source, Mid) ->
   eval(Source, Mid, []).
@@ -55,9 +55,9 @@ data(Data) ->
   eon:new(Data).
 
 -spec apply(#modron{}, #event{} | [#event{}]) ->
-               maybe({done, #modron{}} |
-                     {next, #modron{}} |
-                     {next, #modron{}, timeout()},  _).
+               'maybe'({done, #modron{}} |
+                       {next, #modron{}} |
+                       {next, #modron{}, timeout()},  _).
 %% @doc Send Events to Modron, then take as many steps as possible.
 apply(Modron, Events) ->
   s2_maybe:do(
