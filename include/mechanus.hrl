@@ -37,7 +37,7 @@
         , events=[]                   :: [#event{}]    %unprocessed events
         , ev_hist=[]                  :: [#event{}]    %processed events (rev)
         , actions=[]                  :: [module()]    %unprocessed actions
-        , act_hist=[]                 :: [module()]    %processed actions (rev)
+        , act_hist=[]                 :: [[module()]]    %processed actions (rev)
         , spec=error('modron.spec')   :: _             %FSM specification
         }).
 
@@ -49,7 +49,7 @@
 
 -type obj(A, B)  :: eon:object(A, B).
 -type mid()      :: mechanus:id().
--type tid()      :: mechanus_queue:id().
+-type tid()      :: any(). % mechanus_queue:id().
 -type filename() :: string() | atom().
 
 %%%_* Footer ===========================================================

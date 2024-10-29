@@ -31,7 +31,7 @@
 
 %%%_* Code =============================================================
 %%%_ * API -------------------------------------------------------------
--spec eval(filename() | mechanus:spec(), mechanus:id()) -> maybe(#modron{}, _).
+-spec eval(filename() | mechanus:spec(), mechanus:id()) -> 'maybe'(#modron{}, _).
 %% @doc Construct modron ID according to Spec.
 eval(Source, Mid) ->
   eval(Source, Mid, []).
@@ -55,9 +55,9 @@ data(Data) ->
   eon:new(Data).
 
 -spec apply(#modron{}, #event{} | [#event{}]) ->
-               maybe({done, #modron{}} |
-                     {next, #modron{}} |
-                     {next, #modron{}, timeout()},  _).
+               'maybe'({done, #modron{}} |
+                       {next, #modron{}} |
+                       {next, #modron{}, timeout()},  _).
 %% @doc Send Events to Modron, then take as many steps as possible.
 apply(Modron, Events) ->
   s2_maybe:do(
@@ -251,7 +251,8 @@ is_valid(#event{valid_from=TS}) -> mechanus:now() > TS.
 exit_state(#state{name=Name, tab=Tab, on_entry=OnEntry, on_exit=OnExit}, Event, ID) ->
   case eon:get(Tab, Event) of
     {ok, State} ->
-      ?info(#{ description => "State transition applied"
+      update_counter(mechanus_state_transitions, [Name, State#state.name, Event]),
+      ?debug(#{ description => "State transition applied"
              , action_id => ID
              , action_name => Name
              , state => State#state.name
@@ -259,6 +260,7 @@ exit_state(#state{name=Name, tab=Tab, on_entry=OnEntry, on_exit=OnExit}, Event, 
              }),
       {State, OnExit};
     {error, notfound} ->
+      update_counter(mechanus_state_transitions_failed, [Name, Event]),
       ?error(#{ description => "no transition found for action"
               , action_id => ID
               , action_name => Name
@@ -282,13 +284,15 @@ effect(#modron{id=ID, actions=As, act_hist=Hist} = M) ->
     fun(A, #modron{data=D, events=Es} = M) ->
       case ?lift(A:perform(D)) of
         {ok, R} ->
-          ?info(#{ description => "Action succeeded"
+          update_counter(mechanus_actions, [A, success]),
+          ?debug(#{ description => "Action succeeded"
                   , action_id => ID
                   , action_name => A
                   }),
           %% Inject before existing events!
           M#modron{data=merge(D, R#result.output), events=R#result.events++Es};
         {error, Rsn} = Err ->
+          update_counter(mechanus_actions, [A, failure]),
           ?error(#{description => "Action failed"
                  , action_id => ID
                  , action_name => A
@@ -297,6 +301,15 @@ effect(#modron{id=ID, actions=As, act_hist=Hist} = M) ->
           throw(Err)
       end
     end, M#modron{actions=[], act_hist=[As|Hist]}, As).
+
+update_counter(Name, Args) ->
+  case mechanus:is_counters_initialized() of
+    true ->
+      prometheus_counter:inc(Name, Args),
+      ok;
+    false ->
+      ok
+  end.
 
 -spec merge(mechanus:data(), mechanus:data()) -> mechanus:data().
 %% @doc Merge Data2 into Data1, with entries in Data2 taking precedence.
@@ -363,6 +376,7 @@ parse_test() ->
   lookup_email = State#state.name.
 
 eval_apply_test() ->
+  mechanus:init_counters(),
   {ok, M0}        = eval(test_fsm(), s2_time:stamp()),
   {ok, {done, M}} = apply(M0, []),
   done_ok         = (M#modron.state)#state.name.
@@ -382,6 +396,7 @@ parse_rows_test() ->
 
 special_case_test() ->
   %% Delayed event
+  mechanus:init_counters(),
   T0 = mechanus:now(),
   T1 = T0 + 500,
   {ok, M0} = eval(test_fsm2(), T0, [{foo, bar}]),
@@ -394,6 +409,8 @@ special_case_test() ->
   {error, {lifted_exn, _, _}} = apply(M, #event{name=ev2}),
 
   ok.
+
+
 
 merge_test() ->
   Obj     = merge([foo, 1], [foo, 2]),
